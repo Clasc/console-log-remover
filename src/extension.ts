@@ -19,7 +19,29 @@ export function activate(context: ExtensionContext) {
     () => {
       // The code you place here will be executed every time your command is executed
       // Display a message box to the user
-      window.showInformationMessage("Hello World from Console.log Remover!");
+
+      window.activeTextEditor?.edit((editBuilder) => {
+		window.showInformationMessage("Starting console log Removal on File: "+  window.activeTextEditor?.document.fileName);
+        const document = window.activeTextEditor?.document;
+        if (!document) {
+          return;
+        }
+        const text = document.getText();
+        const regex = /(?<!\.)console\.log\([\s\S]*?\);?|(?<!\.)console\.log/g;
+        const matches = text.match(regex);
+        if (!matches) {
+          return;
+        }
+        matches.forEach((match) => {
+          const range = document.getWordRangeAtPosition(
+            document.positionAt(text.indexOf(match)),
+          );
+          if (!range) {
+            return;
+          }
+          editBuilder.delete(range);
+        });
+      });
     },
   );
 

@@ -1,0 +1,42 @@
+const x = () => {
+  console.log("hello", 12, 23);
+  console.log({
+    aha: 123,
+    nana: 2134,
+  });
+};
+console.log(123);
+
+something.console.log();
+
+console.log(123);
+
+event.register(console.log);
+console.log(`Value: ${value}`);
+console.log(`Value:
+${value}`);
+
+someFunction().console.log("Chained call");
+
+async function fetchData() {
+  console.log(await fetch("https://example.com"));
+}
+try {
+  throw new Error("Error");
+} catch (error) {
+  console.log(error);
+}
+
+const func = () => console.log("Arrow function");
+
+class MyClass {
+  method() {
+    console.log("Class method");
+  }
+}
+
+switch (value) {
+  case 1:
+    console.log("Case 1");
+    break;
+}
