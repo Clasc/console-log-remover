@@ -8,7 +8,7 @@ export function activate(context: ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "console-log-remover" is now active!');
+	console.log('Congratulations, your extension "console-log-remover" is now active! 🎉');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
