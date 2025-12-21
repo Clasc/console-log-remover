@@ -12,6 +12,9 @@ something.console.log();
 console.log(123);
 
 event.register(console.log);
+
+const str = "This is a console.log(123) statement inside a string";
+
 console.log(`Value: ${value}`);
 console.log(`Value:
 ${value}`);
