@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { commands, ExtensionContext, window } from "vscode";
+import { commands, ExtensionContext, Range, window } from "vscode";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -32,20 +32,19 @@ export function activate(context: ExtensionContext) {
         );
 
         const text = document.getText();
+
         const regex = /(?<!\.)console\.log\([\s\S]*?\);?|(?<!\.)console\.log/g;
         const matches = text.match(regex);
         if (!matches) {
           return;
         }
-        matches.forEach((match) => {
-          const range = document.getWordRangeAtPosition(
-            document.positionAt(text.indexOf(match)),
-          );
-          if (!range) {
-            return;
-          }
-          editBuilder.delete(range);
-        });
+
+        const cleanedText = text.replaceAll(regex, "");
+
+        editBuilder.replace(
+          new Range(document.positionAt(0), document.positionAt(text.length)),
+          cleanedText,
+        );
       });
     },
   );
