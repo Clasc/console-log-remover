@@ -21,11 +21,16 @@ export function activate(context: ExtensionContext) {
       // Display a message box to the user
 
       window.activeTextEditor?.edit((editBuilder) => {
-		window.showInformationMessage("Starting console log Removal on File: "+  window.activeTextEditor?.document.fileName);
         const document = window.activeTextEditor?.document;
         if (!document) {
           return;
         }
+
+        window.showInformationMessage(
+          "Starting console log Removal on File: " +
+            window.activeTextEditor?.document.fileName,
+        );
+
         const text = document.getText();
         const regex = /(?<!\.)console\.log\([\s\S]*?\);?|(?<!\.)console\.log/g;
         const matches = text.match(regex);
