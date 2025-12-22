@@ -44,6 +44,10 @@ try {
 }
 
 const func = () => console.log("Arrow function");
+console.log(console.log("Nested console.log"));
+
+console.log(gemma("test"));
+
 
 class MyClass {
   method() {
@@ -68,3 +72,5 @@ const def = {
 };
 
 console.log("This is a smiley :) inside a log")
+
+console.log(abc("asdfghj;"));

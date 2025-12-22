@@ -3,7 +3,7 @@
 import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
-import { commands, ExtensionContext, Position, Range, window } from "vscode";
+import { commands, ExtensionContext, Range, window } from "vscode";
 import { foreEachReversed } from "./utils/forEachReversed";
 
 // Extension is activated the very first time the command is executed
@@ -22,8 +22,8 @@ export function activate(context: ExtensionContext) {
       try {
         const ast = parser.parse(text, { plugins: ["typescript", "jsx"] });
 
-        const rangesToDelete: Range[] = [];
-        const nodesToKeep: (t.Node & { code: string })[] = [];
+        const nodesToDelete: t.Node[] = [];
+        const nodesToKeep: Map<string, string[]> = new Map();
 
         const isConsoleLog = (node: t.CallExpression) =>
           t.isMemberExpression(node.callee) &&
@@ -31,21 +31,18 @@ export function activate(context: ExtensionContext) {
           t.isIdentifier(node.callee.property) &&
           node.callee.property.name === "log";
 
-        const addNodesToKeep = (node: t.Node) => {
-          nodesToKeep.push({
-            ...node,
-            code: text.slice(node.start!, node.end!),
-          });
+        const getNodeKey = (node: t.Node) => `${node.start} + ${node.end}`;
+
+        const addNodesToKeep = (parent: t.Node, nodes: t.Node[]) => {
+          nodesToKeep.set(
+            getNodeKey(parent),
+            nodes.map((node) => text.slice(node.start!, node.end!)),
+          );
         };
 
         const addRangeToRemove = (node: t.Node) => {
           if (node.start != undefined && node.end != undefined) {
-            rangesToDelete.push(
-              new Range(
-                document.positionAt(node.start),
-                document.positionAt(node.end),
-              ),
-            );
+            nodesToDelete.push(node);
           }
         };
 
@@ -66,34 +63,39 @@ export function activate(context: ExtensionContext) {
               addRangeToRemove(path.parent);
             }
 
-            if (t.isCallExpression(node.arguments[0])) {
-              if (!isConsoleLog(node.arguments[0])) {
-                addNodesToKeep(node.arguments[0]);
-              }
-            }
+            // Remove nested console log calls inside console.log
+            // Keep the arguments of the console.log call if they are function calls.
+            // Keep the information of the parent node so we can add it back later at the position, when the parent is removed
+            const args = node.arguments
+              .filter(t.isCallExpression)
+              .filter((arg) => !isConsoleLog(arg));
+            addNodesToKeep(path.parent, args);
           },
         });
 
         window.activeTextEditor
           ?.edit((editBuilder) => {
             // loop in reverse to avoid messing up positions while deleting
-            foreEachReversed(rangesToDelete, (range) => {
+            foreEachReversed(nodesToDelete, (node) => {
+              const range = new Range(
+                document.positionAt(node.start!),
+                document.positionAt(node.end!),
+              );
               editBuilder.delete(range);
-            });
 
-            nodesToKeep.forEach((node) => {
-              if (t.isCallExpression(node)) {
-                editBuilder.insert(
-                  new Position(node.start!, node.end!),
-                  node.code,
-                );
+              // reinsert the node that should be kept inside the parent node
+              const args = nodesToKeep.get(getNodeKey(node));
+              if (args) {
+                args.forEach((arg) => {
+                  editBuilder.insert(range.start, arg);
+                });
               }
             });
           })
           .then((success) => {
             if (success) {
               window.showInformationMessage(
-                rangesToDelete.length + " Console logs removed successfully!",
+                nodesToDelete.length + " Console logs removed successfully!",
               );
             } else {
               window.showErrorMessage("Failed to remove console logs.");

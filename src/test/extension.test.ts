@@ -175,6 +175,18 @@ suite("Extension Test Suite", () => {
       assert.strictEqual(text, `abc(1)`);
     });
 
+    test("Keep multiple nested function calls inside console.log ", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `console.log(abc(1), def(2), ghi(3));`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, `abc(1)def(2)ghi(3)`);
+    });
+
     test("Remove nested console log calls inside console.log ", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: `console.log(console.log(a));`,
