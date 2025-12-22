@@ -84,9 +84,7 @@ export function activate(context: ExtensionContext) {
               // reinsert the node that should be kept inside the parent node
               const args = nodesToKeep.get(getNodeKey(node));
               if (args) {
-                args.forEach((arg) => {
-                  editBuilder.insert(range.start, arg);
-                });
+                editBuilder.insert(range.start, args.join(", "));
               }
             });
           })

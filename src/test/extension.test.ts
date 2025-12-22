@@ -184,7 +184,7 @@ suite("Extension Test Suite", () => {
       await vscode.commands.executeCommand("console-log-remover.remove");
       await wait();
       const text = document.getText();
-      assert.strictEqual(text, `abc(1)def(2)ghi(3)`);
+      assert.strictEqual(text, `abc(1), def(2), ghi(3)`);
     });
 
     test("Remove nested console log calls inside console.log ", async () => {
