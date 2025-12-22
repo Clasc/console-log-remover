@@ -5,10 +5,10 @@
   },
   "name": "console-log-remover",
   "displayName": "Console.log Remover",
-  "description": "Remove and toggle all console logs in the current file",
+  "description": "Intelligently remove all console logs in the current file",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.107.0"
+    "vscode": "1.107.0"
   },
   "categories": [
     "Other"
@@ -19,7 +19,7 @@
     "commands": [
       {
         "command": "console-log-remover.remove",
-        "title": "Remove console logs"
+        "title": "Remove console logs in current file"
       }
     ]
   },
@@ -32,8 +32,8 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/babel__core": "^7.20.5",
-    "@types/babel__traverse": "^7.28.0",
+    "@types/babel__core": "7.20.5",
+    "@types/babel__traverse": "7.28.0",
     "@types/mocha": "10.0.10",
     "@types/node": "22.x",
     "@types/vscode": "1.107.0",
@@ -45,8 +45,8 @@
     "typescript-eslint": "8.48.1"
   },
   "dependencies": {
-    "@babel/parser": "^7.28.5",
-    "@babel/traverse": "^7.28.5",
-    "@babel/types": "^7.28.5"
+    "@babel/parser": "7.28.5",
+    "@babel/traverse": "7.28.5",
+    "@babel/types": "7.28.5"
   }
 }
