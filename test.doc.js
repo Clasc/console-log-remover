@@ -66,3 +66,5 @@ const abc = {
 const def = {
   bla:()=>console.log("test"),
 };
+
+console.log("This is a smiley :) inside a log")
