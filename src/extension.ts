@@ -63,6 +63,10 @@ export function activate(context: ExtensionContext) {
               addRangeToRemove(path.parent);
             }
 
+            if (t.isSequenceExpression(path.parent)) {
+              addRangeToRemove(node);
+            }
+
             // Remove nested console log calls inside console.log
             // Keep the arguments of the console.log call if they are function calls.
             // Keep the information of the parent node so we can add it back later at the position, when the parent is removed
