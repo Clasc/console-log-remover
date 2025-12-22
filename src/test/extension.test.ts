@@ -13,7 +13,10 @@ suite("Extension Test Suite", () => {
    * Code editors might change the indentation of the code on save.
    */
   const normalize = (str: string) =>
-    str.replace(/(?:\r\n|\r|\n)/g, "").replace(/\s+/g, " ");
+    str
+      .replace(/(?:\r\n|\r|\n)/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
   vscode.window.showInformationMessage("Start all tests.");
 
@@ -25,23 +28,24 @@ suite("Extension Test Suite", () => {
 
   test("Remove multiline console.log", async () => {
     const document = await vscode.workspace.openTextDocument({
-      content: `console.log("hello there",
+      content: `type X= "A";
+      console.log("hello there",
       12,
       23);`,
-      language: "javascript",
+      language: "typescript",
     });
 
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
     await wait();
     const text = document.getText();
-    assert.strictEqual(text, "");
+    assert.strictEqual(normalize(text), normalize('type X= "A";'));
   });
 
   test("Remove single-line console.log", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: 'console.log("Hello, world!");',
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -56,7 +60,7 @@ suite("Extension Test Suite", () => {
         aha: 123,
         nana: 2134
       });`,
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -68,7 +72,7 @@ suite("Extension Test Suite", () => {
   test("Remove console.log without semicolon", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: 'console.log("No semicolon")',
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -80,7 +84,7 @@ suite("Extension Test Suite", () => {
   test.skip("Remove console.log passed as a function", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: "event.register(console.log);",
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -94,7 +98,7 @@ suite("Extension Test Suite", () => {
     /* console.log("This is also a comment"); */`;
     const document = await vscode.workspace.openTextDocument({
       content,
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -106,7 +110,7 @@ suite("Extension Test Suite", () => {
     const document = await vscode.workspace.openTextDocument({
       content:
         'const str = "This is a console.log(123) statement inside a string";',
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -121,7 +125,7 @@ suite("Extension Test Suite", () => {
     const document = await vscode.workspace.openTextDocument({
       content:
         'const template = `console.log("This is inside a template literal")`;',
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -136,7 +140,7 @@ suite("Extension Test Suite", () => {
     test("Remove multiple console.log calls in a single line", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: 'console.log("First"), console.log("Second");',
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -149,7 +153,7 @@ suite("Extension Test Suite", () => {
       const document = await vscode.workspace.openTextDocument({
         content:
           'console.log("First"), testFunc("someVal",123) ,console.log("Second");',
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -163,7 +167,7 @@ suite("Extension Test Suite", () => {
     test("Remove console.log with null value", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: "console.log(null);",
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -175,7 +179,7 @@ suite("Extension Test Suite", () => {
     test("Remove console.log with template literals containing newlines", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: "console.log(`Value:\n${value}`);",
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -187,7 +191,7 @@ suite("Extension Test Suite", () => {
     test("Ignore chained console.log call", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: 'someFunction().console.log("Chained call");',
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -201,7 +205,7 @@ suite("Extension Test Suite", () => {
         content: `async function fetchData() {
     console.log(await fetch("https://example.com"));
   }`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -222,7 +226,7 @@ suite("Extension Test Suite", () => {
   } catch (error) {
     console.log(error);
   }`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -241,7 +245,7 @@ suite("Extension Test Suite", () => {
         content: `class MyClass {
         method() {console.log("Class method");}
   }`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -262,7 +266,7 @@ suite("Extension Test Suite", () => {
       console.log("Case 1");
       break;
   }`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -282,7 +286,7 @@ suite("Extension Test Suite", () => {
         content: `const abc = {
     log: console.log,
   };`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -299,7 +303,7 @@ suite("Extension Test Suite", () => {
     test("Remove console.log with smiley", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: 'console.log("This is a smiley :) inside a log");',
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -311,7 +315,7 @@ suite("Extension Test Suite", () => {
     test("Remove console.log with comment before", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: `console /* console.log */ .log("this is tricky.");`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -325,7 +329,7 @@ suite("Extension Test Suite", () => {
     const content = `console.log(`;
     const document = await vscode.workspace.openTextDocument({
       content,
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -337,7 +341,7 @@ suite("Extension Test Suite", () => {
   test("Remove console.log with different parentheses styles", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: `console.log( "Hello" );`,
-      language: "javascript",
+      language: "typescript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
@@ -350,7 +354,7 @@ suite("Extension Test Suite", () => {
     test("Keep nested function call inside console.log ", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: `console.log(abc(1));`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -362,7 +366,7 @@ suite("Extension Test Suite", () => {
     test("Keep multiple nested function calls inside console.log ", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: `console.log(abc(1), def(2), ghi(3));`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -374,7 +378,7 @@ suite("Extension Test Suite", () => {
     test("Remove nested console log calls inside console.log ", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: `console.log(console.log(a));`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -390,7 +394,7 @@ suite("Extension Test Suite", () => {
         content: `const obj = {
       method: () => console.log("Nested console.log"),
     };`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");
@@ -407,7 +411,7 @@ suite("Extension Test Suite", () => {
     test("Remove console.log in anonymous arrow function", async () => {
       const document = await vscode.workspace.openTextDocument({
         content: `() => console.log("Nested console.log");`,
-        language: "javascript",
+        language: "typescript",
       });
       await vscode.window.showTextDocument(document);
       await vscode.commands.executeCommand("console-log-remover.remove");

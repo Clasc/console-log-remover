@@ -18,7 +18,10 @@ export function activate(context: ExtensionContext) {
       const text = document.getText();
 
       try {
-        const ast = parser.parse(text, { plugins: ["typescript", "jsx"] });
+        const ast = parser.parse(text, {
+          sourceType: "module",
+          plugins: ["typescript", "jsx"],
+        });
 
         const nodesToDelete: t.Node[] = [];
         const nodesToKeep: Map<string, string[]> = new Map();
