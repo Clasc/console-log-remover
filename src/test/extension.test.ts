@@ -8,6 +8,13 @@ suite("Extension Test Suite", () => {
     });
   };
 
+  /**
+   * Use for tests where whitespaces could break the assertion.
+   * Code editors might change the indentation of the code on save.
+   */
+  const normalize = (str: string) =>
+    str.replace(/(?:\r\n|\r|\n)/g, "").replace(/\s+/g, " ");
+
   vscode.window.showInformationMessage("Start all tests.");
 
   teardown(async () => {
@@ -149,6 +156,168 @@ suite("Extension Test Suite", () => {
       await wait();
       const text = document.getText();
       assert.strictEqual(text, ', testFunc("someVal",123) ,;');
+    });
+  });
+
+  suite("Additional Test Cases", () => {
+    test("Remove console.log with null value", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: "console.log(null);",
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, "");
+    });
+
+    test("Remove console.log with template literals containing newlines", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: "console.log(`Value:\n${value}`);",
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, "");
+    });
+
+    test("Ignore chained console.log call", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: 'someFunction().console.log("Chained call");',
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, 'someFunction().console.log("Chained call");');
+    });
+
+    test.skip("Remove console.log with nested await", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `async function fetchData() {
+    console.log(await fetch("https://example.com"));
+  }`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(
+        text,
+        `async function fetchData() {
+    await fetch("https://example.com")
+  }`,
+      );
+    });
+
+    test("Remove console.log in try-catch block", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `try {
+    throw new Error("Error");
+  } catch (error) {
+    console.log(error);
+  }`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(
+        normalize(text),
+        normalize(`try {
+    throw new Error("Error");
+  } catch (error) { }`),
+      );
+    });
+
+    test("Remove console.log in class method", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `class MyClass {
+        method() {console.log("Class method");}
+  }`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(
+        text,
+        `class MyClass {
+        method() {}
+  }`,
+      );
+    });
+
+    test("Remove console.log in switch statement", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `switch (value) {
+    case 1:
+      console.log("Case 1");
+      break;
+  }`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(
+        normalize(text),
+        normalize(`switch (value) {
+    case 1:
+          break;
+  }`),
+      );
+    });
+
+    test("Ignore console.log in object property", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `const abc = {
+    log: console.log,
+  };`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(
+        text,
+        `const abc = {
+    log: console.log,
+  };`,
+      );
+    });
+
+    test("Remove console.log with smiley", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: 'console.log("This is a smiley :) inside a log");',
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, "");
+    });
+
+    test("Remove console.log with comment before", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `console /* console.log */ .log("this is tricky.");`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, ``);
     });
   });
 
