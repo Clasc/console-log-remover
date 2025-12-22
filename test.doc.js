@@ -1,3 +1,16 @@
+/* console.log("This is also a comment"); */
+
+/*
+ * console.log("This is also a comment");
+ */
+
+//console.log(123)
+
+(console.log(123), console.log("124"));
+
+x = console.log;
+(console.log(123), console.log(1243));
+
 const x = () => {
   console.log("hello", 12, 23);
   console.log({
