@@ -162,6 +162,32 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "");
   });
 
+  suite("nested call expression", () => {
+    test("Keep nested function call inside console.log ", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `console.log(abc(1));`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, `abc(1)`);
+    });
+
+    test("Remove nested console log calls inside console.log ", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `console.log(console.log(a));`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, ``);
+    });
+  });
+
   suite("arrow functions", () => {
     test("Remove console.log in nested expressions", async () => {
       const document = await vscode.workspace.openTextDocument({

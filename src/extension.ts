@@ -3,7 +3,7 @@
 import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
-import { commands, ExtensionContext, Range, window } from "vscode";
+import { commands, ExtensionContext, Position, Range, window } from "vscode";
 import { foreEachReversed } from "./utils/forEachReversed";
 
 // Extension is activated the very first time the command is executed
@@ -23,8 +23,22 @@ export function activate(context: ExtensionContext) {
         const ast = parser.parse(text, { plugins: ["typescript", "jsx"] });
 
         const rangesToDelete: Range[] = [];
+        const nodesToKeep: (t.Node & { code: string })[] = [];
 
-        const addRange = (node: t.Node) => {
+        const isConsoleLog = (node: t.CallExpression) =>
+          t.isMemberExpression(node.callee) &&
+          t.isIdentifier(node.callee.object, { name: "console" }) &&
+          t.isIdentifier(node.callee.property) &&
+          node.callee.property.name === "log";
+
+        const addNodesToKeep = (node: t.Node) => {
+          nodesToKeep.push({
+            ...node,
+            code: text.slice(node.start!, node.end!),
+          });
+        };
+
+        const addRangeToRemove = (node: t.Node) => {
           if (node.start != undefined && node.end != undefined) {
             rangesToDelete.push(
               new Range(
@@ -39,24 +53,23 @@ export function activate(context: ExtensionContext) {
           CallExpression: (path) => {
             const node = path.node;
 
-            // Check if the callee is console.log
-            const isConsoleLog =
-              t.isMemberExpression(node.callee) &&
-              t.isIdentifier(node.callee.object, { name: "console" }) &&
-              t.isIdentifier(node.callee.property) &&
-              node.callee.property.name === "log";
-
-            if (!isConsoleLog) {
+            if (!isConsoleLog(node)) {
               return;
             }
 
             if (t.isArrowFunctionExpression(path.parent)) {
               //for arrow functions only add the range of the function body to be removed
-              addRange(node);
+              addRangeToRemove(node);
             }
 
             if (t.isExpressionStatement(path.parent)) {
-              addRange(path.parent);
+              addRangeToRemove(path.parent);
+            }
+
+            if (t.isCallExpression(node.arguments[0])) {
+              if (!isConsoleLog(node.arguments[0])) {
+                addNodesToKeep(node.arguments[0]);
+              }
             }
           },
         });
@@ -66,6 +79,15 @@ export function activate(context: ExtensionContext) {
             // loop in reverse to avoid messing up positions while deleting
             foreEachReversed(rangesToDelete, (range) => {
               editBuilder.delete(range);
+            });
+
+            nodesToKeep.forEach((node) => {
+              if (t.isCallExpression(node)) {
+                editBuilder.insert(
+                  new Position(node.start!, node.end!),
+                  node.code,
+                );
+              }
             });
           })
           .then((success) => {
