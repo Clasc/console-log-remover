@@ -5,8 +5,8 @@ import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { commands, ExtensionContext, Range, window } from "vscode";
 import { foreEachReversed } from "./utils/forEachReversed";
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+
+// Extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext) {
   // The commandId parameter must match the command field in package.json
   const removeCommand = commands.registerCommand(
