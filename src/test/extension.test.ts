@@ -125,16 +125,31 @@ suite("Extension Test Suite", () => {
     );
   });
 
-  test.skip("Remove multiple console.log calls in a single line", async () => {
-    const document = await vscode.workspace.openTextDocument({
-      content: 'console.log("First"), console.log("Second");',
-      language: "javascript",
+  suite("Sequence Expression", () => {
+    test("Remove multiple console.log calls in a single line", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: 'console.log("First"), console.log("Second");',
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, ", ;");
     });
-    await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
-    await wait();
-    const text = document.getText();
-    assert.strictEqual(text, " ");
+
+    test("Remove multiple console.log calls in a single line that are mixed with other statements. Keep other statements.", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content:
+          'console.log("First"), testFunc("someVal",123) ,console.log("Second");',
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, ', testFunc("someVal",123) ,;');
+    });
   });
 
   test("Do not crash on syntax error", async () => {
