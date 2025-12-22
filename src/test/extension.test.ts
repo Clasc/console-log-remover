@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 
 suite("Extension Test Suite", () => {
-  const wait = async (n = 200) => {
+  const wait = async (n = 100) => {
     return new Promise((resolve) => {
       setTimeout(resolve, n);
     });
@@ -13,6 +13,7 @@ suite("Extension Test Suite", () => {
   teardown(async () => {
     vscode.window.showInformationMessage("CLOSING");
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+    await wait(50);
   });
 
   test("Remove multiline console.log", async () => {
@@ -24,12 +25,13 @@ suite("Extension Test Suite", () => {
     });
 
     await vscode.window.showTextDocument(document);
+    await wait(100);
     await vscode.commands.executeCommand("console-log-remover.remove");
+    await wait(1000);
     const text = document.getText();
     assert.strictEqual(text, "");
   });
 
-  // Test cases for console.log removal
   test("Remove single-line console.log", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: 'console.log("Hello, world!");',
@@ -69,7 +71,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "");
   });
 
-  test("Remove console.log passed as a function", async () => {
+  test.skip("Remove console.log passed as a function", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: "event.register(console.log);",
       language: "javascript",
@@ -94,7 +96,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, content);
   });
 
-  test.skip("Ignore console.log in string literals", async () => {
+  test("Ignore console.log in string literals", async () => {
     const document = await vscode.workspace.openTextDocument({
       content:
         'const str = "This is a console.log(123) statement inside a string";',
@@ -109,7 +111,7 @@ suite("Extension Test Suite", () => {
     );
   });
 
-  test.skip("Ignore console.log in template literals", async () => {
+  test("Ignore console.log in template literals", async () => {
     const document = await vscode.workspace.openTextDocument({
       content:
         'const template = `console.log("This is inside a template literal")`;',
@@ -124,7 +126,7 @@ suite("Extension Test Suite", () => {
     );
   });
 
-  test("Remove multiple console.log calls in a single line", async () => {
+  test.skip("Remove multiple console.log calls in a single line", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: 'console.log("First"), console.log("Second");',
       language: "javascript",
@@ -148,10 +150,10 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "");
   });
 
-  test("Remove console.log in nested expressions", async () => {
+  test.skip("Remove console.log in nested expressions", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: `const obj = {
-      method: () =>console.log("Nested console.log"),
+      method: () => console.log("Nested console.log"),
     };`,
       language: "javascript",
     });

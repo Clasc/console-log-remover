@@ -32,6 +32,8 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__traverse": "^7.28.0",
     "@types/mocha": "10.0.10",
     "@types/node": "22.x",
     "@types/vscode": "1.107.0",
@@ -41,5 +43,10 @@
     "prettier": "3.7.4",
     "typescript": "5.9.3",
     "typescript-eslint": "8.48.1"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.28.5",
+    "@babel/traverse": "^7.28.5",
+    "@babel/types": "^7.28.5"
   }
 }
