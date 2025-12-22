@@ -71,10 +71,15 @@ const abc = {
 const def = {
   bla: () => console.log("test"),
   blba: () => {
-    console.log(testme("test"))
+    console.log(testme("test"));
   },
 };
 
 console.log("This is a smiley :) inside a log");
 
 console.log(abc("asdfghj;"));
+
+console.log("ABC"); /* console.log("Inside comment") */
+
+console /* console.log */
+  .log("this is tricky.");
