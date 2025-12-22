@@ -148,20 +148,21 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "");
   });
 
-  test.skip("Ignore console.log in nested expressions", async () => {
+  test("Remove console.log in nested expressions", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: `const obj = {
-      method: () => console.log("Nested console.log"),
+      method: () =>console.log("Nested console.log"),
     };`,
       language: "javascript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
+    await wait();
     const text = document.getText();
     assert.strictEqual(
       text,
       `const obj = {
-      method: () => ,
+      method: () =>
     };`,
     );
   });
