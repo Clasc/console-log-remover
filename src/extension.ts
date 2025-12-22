@@ -39,6 +39,8 @@ export function activate(context: ExtensionContext) {
         };
 
         const addRangeToRemove = (node: t.Node) => {
+          // allow rule for implicit nullish and undefined check
+          // eslint-disable-next-line eqeqeq
           if (node.start != undefined && node.end != undefined) {
             nodesToDelete.push(node);
           }
