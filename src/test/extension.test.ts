@@ -138,6 +138,19 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, " ");
   });
 
+  test("Do not crash on syntax error", async () => {
+    const content = `console.log(`;
+    const document = await vscode.workspace.openTextDocument({
+      content,
+      language: "javascript",
+    });
+    await vscode.window.showTextDocument(document);
+    await vscode.commands.executeCommand("console-log-remover.remove");
+    await wait();
+    const text = document.getText();
+    assert.strictEqual(text, content);
+  });
+
   test("Remove console.log with different parentheses styles", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: `console.log( "Hello" );`,
