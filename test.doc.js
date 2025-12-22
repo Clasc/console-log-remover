@@ -6,7 +6,11 @@
 
 //console.log(123)
 
-(console.log(123), console.log("124"));
+(console.log(123), console.log("124"), testme(123));
+
+console.log({}, undefined);
+
+console.log(null);
 
 x = console.log;
 (console.log(123), console.log(1243));
@@ -35,7 +39,7 @@ ${value}`);
 someFunction().console.log("Chained call");
 
 async function fetchData() {
-  console.log(await fetch("https://example.com"));
+  console.log(fetch("https://example.com"));
 }
 try {
   throw new Error("Error");
@@ -47,7 +51,6 @@ const func = () => console.log("Arrow function");
 console.log(console.log("Nested console.log"));
 
 console.log(gemma("test"));
-
 
 class MyClass {
   method() {
@@ -61,16 +64,17 @@ switch (value) {
     break;
 }
 
-
-
 const abc = {
   log: console.log,
 };
 
 const def = {
-  bla:()=>console.log("test"),
+  bla: () => console.log("test"),
+  blba: () => {
+    console.log(testme("test"))
+  },
 };
 
-console.log("This is a smiley :) inside a log")
+console.log("This is a smiley :) inside a log");
 
 console.log(abc("asdfghj;"));
