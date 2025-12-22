@@ -56,3 +56,13 @@ switch (value) {
     console.log("Case 1");
     break;
 }
+
+
+
+const abc = {
+  log: console.log,
+};
+
+const def = {
+  bla:()=>console.log("test"),
+};
