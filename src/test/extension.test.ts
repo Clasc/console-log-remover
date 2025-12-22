@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 
 suite("Extension Test Suite", () => {
-  const wait = async (n = 100) => {
+  const wait = async (n = 50) => {
     return new Promise((resolve) => {
       setTimeout(resolve, n);
     });
@@ -13,7 +13,7 @@ suite("Extension Test Suite", () => {
   teardown(async () => {
     vscode.window.showInformationMessage("CLOSING");
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
-    await wait(50);
+    await wait();
   });
 
   test("Remove multiline console.log", async () => {
@@ -25,9 +25,8 @@ suite("Extension Test Suite", () => {
     });
 
     await vscode.window.showTextDocument(document);
-    await wait(100);
     await vscode.commands.executeCommand("console-log-remover.remove");
-    await wait(1000);
+    await wait();
     const text = document.getText();
     assert.strictEqual(text, "");
   });
@@ -163,22 +162,36 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "");
   });
 
-  test.skip("Remove console.log in nested expressions", async () => {
-    const document = await vscode.workspace.openTextDocument({
-      content: `const obj = {
+  suite("arrow functions", () => {
+    test("Remove console.log in nested expressions", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `const obj = {
       method: () => console.log("Nested console.log"),
     };`,
-      language: "javascript",
-    });
-    await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
-    await wait();
-    const text = document.getText();
-    assert.strictEqual(
-      text,
-      `const obj = {
-      method: () =>
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(
+        text,
+        `const obj = {
+      method: () => ,
     };`,
-    );
+      );
+    });
+
+    test("Remove console.log in anonymous arrow function", async () => {
+      const document = await vscode.workspace.openTextDocument({
+        content: `() => console.log("Nested console.log");`,
+        language: "javascript",
+      });
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand("console-log-remover.remove");
+      await wait();
+      const text = document.getText();
+      assert.strictEqual(text, `() => ;`);
+    });
   });
 });

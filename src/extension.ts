@@ -24,6 +24,17 @@ export function activate(context: ExtensionContext) {
 
         const rangesToDelete: Range[] = [];
 
+        const addRange = (node: t.Node) => {
+          if (node.start != undefined && node.end != undefined) {
+            rangesToDelete.push(
+              new Range(
+                document.positionAt(node.start),
+                document.positionAt(node.end),
+              ),
+            );
+          }
+        };
+
         traverse(ast, {
           CallExpression: (path) => {
             const node = path.node;
@@ -39,22 +50,13 @@ export function activate(context: ExtensionContext) {
               return;
             }
 
-            if (!t.isExpressionStatement(path.parent)) {
-              // ignore if not an expression statement because it has more complexity
-              // e.g. console.log(345), console.log(123);
-              return;
+            if (t.isArrowFunctionExpression(path.parent)) {
+              //for arrow functions only add the range of the function body to be removed
+              addRange(node);
             }
 
-            const { parent } = path;
-            // -> we want to check for both null and undefined
-            // eslint-disable-next-line eqeqeq
-            if (parent.start != undefined && parent.end != undefined) {
-              rangesToDelete.push(
-                new Range(
-                  document.positionAt(parent.start),
-                  document.positionAt(parent.end),
-                ),
-              );
+            if (t.isExpressionStatement(path.parent)) {
+              addRange(path.parent);
             }
           },
         });
