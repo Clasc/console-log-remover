@@ -79,7 +79,6 @@ export function activate(context: ExtensionContext) {
         window.showErrorMessage(
           "Could not parse document. Make sure it does not contain any syntax errors. or is a js/ts file.",
         );
-        console.error(error);
       }
     },
   );
