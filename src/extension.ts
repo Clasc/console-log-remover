@@ -28,13 +28,28 @@ export function activate(context: ExtensionContext) {
 
         const text = document.getText();
 
-        const regex = /(?<!\.)console\.log\([\s\S]*?\);?|(?<!\.)console\.log/g;
+        // first group matches comments
+        // second group matches console.log statements
+        // third group matches semicolon or comma
+        // actually remove only the second and third group
+        const regex =
+          /(^\s*(?:\/\/|\/\*|\*).*)|(?<!\.)console\.log(\([\s\S]*?\))?(;|,)?/g;
         const matches = text.match(regex);
         if (!matches) {
           return;
         }
 
-        const cleanedText = text.replaceAll(regex, "");
+        const cleanedText = text.replaceAll(
+          regex,
+          (match, commentGroup, _logGroup, separatorGroup) => {
+            if (commentGroup) {
+              // Match Group 1, return it unchanged
+              return match + separatorGroup;
+            }
+            //  console.log -> delete
+            return "";
+          },
+        );
 
         editBuilder.replace(
           new Range(document.positionAt(0), document.positionAt(text.length)),

@@ -81,20 +81,17 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "event.register();");
   });
 
-  test.skip("Ignore console.log in comments", async () => {
+  test("Ignore console.log in comments", async () => {
+    const content = `// console.log("This is a comment");
+    /* console.log("This is also a comment"); */`;
     const document = await vscode.workspace.openTextDocument({
-      content: `// console.log("This is a comment");
-      /* console.log("This is also a comment"); */`,
+      content,
       language: "javascript",
     });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand("console-log-remover.remove");
     const text = document.getText();
-    assert.strictEqual(
-      text,
-      `// console.log("This is a comment");
-    /* console.log("This is also a comment"); */`,
-    );
+    assert.strictEqual(text, content);
   });
 
   test.skip("Ignore console.log in string literals", async () => {
@@ -136,7 +133,7 @@ suite("Extension Test Suite", () => {
     await vscode.commands.executeCommand("console-log-remover.remove");
     await wait();
     const text = document.getText();
-    assert.strictEqual(text, ", ");
+    assert.strictEqual(text, " ");
   });
 
   test("Remove console.log with different parentheses styles", async () => {
