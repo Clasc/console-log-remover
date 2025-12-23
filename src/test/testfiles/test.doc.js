@@ -1,12 +1,15 @@
-/* console.log("This is also a comment"); */
+/**
+ * This is a test TypeScript file for manual testing of the console log remover extension.
+ */
 
+(console.log(123), console.log("124"), testme(123));
+
+/* console.log("This is also a comment"); */
 /*
  * console.log("This is also a comment");
  */
 
 //console.log(123)
-
-(console.log(123), console.log("124"), testme(123));
 
 console.log({}, undefined);
 

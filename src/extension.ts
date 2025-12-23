@@ -20,7 +20,7 @@ export function activate(context: ExtensionContext) {
 
       try {
         const ast = parser.parse(text, {
-          sourceType: "module",
+          sourceType: "unambiguous",
           plugins: ["typescript", "jsx"],
         });
 
