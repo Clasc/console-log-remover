@@ -106,7 +106,7 @@ export function activate(context: ExtensionContext) {
           });
       } catch (error) {
         window.showErrorMessage(
-          "Could not parse document. Make sure it does not contain any syntax errors. or is a js/ts file.",
+          "Could not parse document. Make sure it does not contain any syntax errors. or is a js(x)/ts(x) file.",
         );
       }
     },
