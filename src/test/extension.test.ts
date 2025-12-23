@@ -36,7 +36,7 @@ suite("Extension Test Suite", () => {
     });
 
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(normalize(text), normalize('type X= "A";'));
@@ -48,7 +48,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(text, "");
@@ -63,7 +63,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(text, "");
@@ -75,7 +75,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(text, "");
@@ -87,7 +87,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(text, "event.register();");
@@ -101,7 +101,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     const text = document.getText();
     assert.strictEqual(text, content);
   });
@@ -113,7 +113,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     const text = document.getText();
     assert.strictEqual(
       text,
@@ -128,7 +128,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     const text = document.getText();
     assert.strictEqual(
       text,
@@ -143,7 +143,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, ", ;");
@@ -156,7 +156,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, ', testFunc("someVal",123) ,;');
@@ -170,7 +170,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, "");
@@ -182,7 +182,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, "");
@@ -194,7 +194,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, 'someFunction().console.log("Chained call");');
@@ -208,7 +208,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(
@@ -229,7 +229,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(
@@ -248,7 +248,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(
@@ -269,7 +269,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(
@@ -289,7 +289,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(
@@ -306,7 +306,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, "");
@@ -318,7 +318,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, ``);
@@ -332,7 +332,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(text, content);
@@ -344,7 +344,7 @@ suite("Extension Test Suite", () => {
       language: "typescript",
     });
     await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand("console-log-remover.remove");
+    await vscode.commands.executeCommand("nonsole-logs-remover.remove");
     await wait();
     const text = document.getText();
     assert.strictEqual(text, "");
@@ -357,7 +357,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, `abc(1)`);
@@ -369,7 +369,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, `abc(1), def(2), ghi(3)`);
@@ -381,7 +381,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, ``);
@@ -397,7 +397,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(
@@ -414,7 +414,7 @@ suite("Extension Test Suite", () => {
         language: "typescript",
       });
       await vscode.window.showTextDocument(document);
-      await vscode.commands.executeCommand("console-log-remover.remove");
+      await vscode.commands.executeCommand("nonsole-logs-remover.remove");
       await wait();
       const text = document.getText();
       assert.strictEqual(text, `() => ;`);

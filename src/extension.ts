@@ -9,7 +9,7 @@ import { isConsoleLog } from "./utils/isConsoleLog";
 export function activate(context: ExtensionContext) {
   // The commandId parameter must match the command field in package.json
   const removeCommand = commands.registerCommand(
-    "console-log-remover.remove",
+    "nonsole-logs-remover.remove",
     () => {
       const document = window.activeTextEditor?.document;
       if (!document) {

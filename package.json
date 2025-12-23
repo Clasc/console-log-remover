@@ -29,7 +29,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "console-log-remover.remove",
+        "command": "nonsole-logs-remover.remove",
         "title": "Remove console logs in current file"
       }
     ]
