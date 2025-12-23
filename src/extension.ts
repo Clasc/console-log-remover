@@ -23,15 +23,13 @@ export function activate(context: ExtensionContext) {
           plugins: ["typescript", "jsx"],
         });
 
-        const nodesToDelete: t.Node[] = [];
-        const nodesToKeep: Map<string, string[]> = new Map();
-
         const isConsoleLog = (node: t.CallExpression) =>
           t.isMemberExpression(node.callee) &&
           t.isIdentifier(node.callee.object, { name: "console" }) &&
           t.isIdentifier(node.callee.property) &&
           node.callee.property.name === "log";
 
+        const nodesToKeep: Map<string, string[]> = new Map();
         const getNodeKey = (node: t.Node) => `${node.start} + ${node.end}`;
 
         const addNodesToKeep = (parent: t.Node, nodes: t.Node[]) => {
@@ -41,6 +39,7 @@ export function activate(context: ExtensionContext) {
           );
         };
 
+        const nodesToDelete: t.Node[] = [];
         const addRangeToRemove = (node: t.Node) => {
           // allow rule for implicit nullish and undefined check
           // eslint-disable-next-line eqeqeq
