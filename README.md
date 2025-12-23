@@ -1,4 +1,6 @@
-# Console.log Remover
+# Console.log Remover a.k.a Nonsole Log
+
+Sorry for the cringe name, it needed to be unique.
 
 An intelligent VS Code extension that goes beyond simple text searching to safely and surgically remove `console.log` statements from your codebase using AST (Abstract Syntax Tree) parsing.
 
