@@ -47,10 +47,7 @@ export function activate(context: ExtensionContext) {
 
         traverse(ast, {
           CallExpression: ({ node, parent }) => {
-            if (
-              !isConsoleLog(node) &&
-              node.arguments.some((arg) => isConsoleLog(arg))
-            ) {
+            if (!isConsoleLog(node)) {
               addNodeToRemove(...node.arguments.filter(isConsoleLog));
             }
 
