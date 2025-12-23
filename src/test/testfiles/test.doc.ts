@@ -77,6 +77,8 @@ const myFunc = () => {
   });
 };
 
+const logData = (data:any) => console.log(data);
+
 event.register(console.log);
 
 console.log(`Value:
