@@ -1,19 +1,25 @@
 {
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "author": {
     "name": "Christian Konnaris"
   },
-  "name": "console-log-remover",
-  "displayName": "Console.log Remover",
-  "description": "Intelligently remove all console logs in the current file",
+  "icon": "images/icon.png",
+  "name": "nonsole-logs",
+  "displayName": "Nonsole Logs",
+  "description": "Smartly remove all console logs in the current file.",
   "version": "1.0.0",
   "engines": {
     "vscode": "^1.107.0"
   },
+  "bugs": {
+    "url": "https://github.com/Clasc/console-log-remover/issues"
+  },
   "repository": {
-    "url": "https://github.com/Clasc/console-log-remover"
+    "type": "git",
+    "url": "https://github.com/Clasc/console-log-remover.git"
   },
   "categories": [
+    "Programming Languages",
     "Debuggers",
     "Formatters",
     "Other"
@@ -53,6 +59,6 @@
     "@babel/parser": "7.28.5",
     "@babel/traverse": "7.28.5",
     "@babel/types": "7.28.5",
-    "@vscode/vsce": "^3.7.1"
+    "@vscode/vsce": "3.7.1"
   }
 }
