@@ -2,46 +2,84 @@
  * This is a test TypeScript file for manual testing of the console log remover extension.
  */
 
-(console.log(123), console.log("124"), testme(123));
+// seutp helper functions & values
+const testme = (x) => x * 2;
+const event = {
+  register: (callback) => {},
+};
+const value = 42;
+const gemma = (str) => str.toUpperCase();
+const something = {
+  console: { log: () => {} },
+};
+
+const someFunction = () => {
+  return {
+    console: {
+      log: (msg) => {},
+    },
+  };
+};
+
+// console logs to be ignored
+const x = console.log;
+something.console.log();
+someFunction().console.log("This should not be removed");
+x("This should also not be removed");
+
+// console.log inside strings should not be removed
+const str1 = "This is a string with console.log inside";
+const str2 = "Another string with console.log inside";
+const str3 = `Template string with console.log inside: ${console.log("test")}`;
+
+// console.log inside comments should not be removed
+// console.log("This is a comment");
 
 /* console.log("This is also a comment"); */
+
 /*
  * console.log("This is also a comment");
  */
 
-//console.log(123)
+// ------ Actual console.log statements to be removed ------
+
+console.log("Hello, World!"); // simple log
+
+console.log(42); // log with number
+
+console.log("Value is:", value); // log with multiple arguments
+
+console.log(`Template literal with value: ${value}`); // log with template literal
+
+console.log({ key: "value", num: 123 }); // log with object
+
+console.log([1, 2, 3, 4, 5]); // log with array
+
+console.log(true, false, null, undefined); // log with booleans and null/undefined
+
+(console.log(123), console.log("124"), testme(123));
 
 console.log({}, undefined);
 
 console.log(null);
 
-x = console.log;
 (console.log(123), console.log(1243));
 
-const x = () => {
+const myFunc = () => {
   console.log("hello", 12, 23);
   console.log({
     aha: 123,
     nana: 2134,
   });
 };
-console.log(123);
-
-something.console.log();
-
-console.log(123);
 
 event.register(console.log);
 
-const str = "This is a console.log(123) statement inside a string";
-
-console.log(`Value: ${value}`);
 console.log(`Value:
 ${value}`);
 
-someFunction().console.log("Chained call");
-
 async function fetchData() {
+  // keep the fetch call here.
   console.log(fetch("https://example.com"));
 }
 try {
@@ -65,22 +103,19 @@ switch (value) {
   case 1:
     console.log("Case 1");
     break;
+  default:
+    console.log("Default case");
+    break;
 }
-
-const abc = {
-  log: console.log,
-};
 
 const def = {
   bla: () => console.log("test"),
   blba: () => {
-    console.log(testme("test"));
+    console.log(testme(123));
   },
 };
 
 console.log("This is a smiley :) inside a log");
-
-console.log(abc("asdfghj;"));
 
 console.log("ABC"); /* console.log("Inside comment") */
 
