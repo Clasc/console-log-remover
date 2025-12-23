@@ -4,10 +4,10 @@ An intelligent VS Code extension that goes beyond simple text searching to safel
 
 ## 🚀 Why this is better than Search & Replace
 
-We often use a Regex-based search and replace to clean up logs. This is risky, takes effort, and often leads to broken code. This extension uses `@babel/parser` to understand your code's structure, offering several advantages:
+After a long debugging sessions, often want to remove our left behind `console.log` statements. This takes effort, and often leads to broken code on the go, if you accidentally delete something that you did not want. This extension parses your code to understand its structure, offering several advantages:
 
 1.  **Context Awareness**: It won't touch `console.log` strings inside your comments, string literals, or template strings.
-2.  **Syntax Safety**: It understands the boundaries of expressions. It won't accidentally leave behind trailing semicolons or delete too much of a line.
+2.  **Syntax Safety**: It understands the boundaries of expressions. It won't accidentally delete too much of a line.
 3.  **Smart Preservation**: It can identify nested function calls *inside* a log and keep them while removing the log itself.
 4.  **Language Support**: Built-in support for **TypeScript**, **JSX**, and **TSX** out of the box.
 
@@ -21,7 +21,7 @@ We often use a Regex-based search and replace to clean up logs. This is risky, t
 ## 📖 Examples
 
 ### Smart Removal (Preserving Logic)
-Standard tools would delete the entire line, potentially breaking your logic if the function inside the log was necessary. This extension extracts the inner call:
+Standard tools would delete the entire line, potentially breaking your logic if the function inside the log was necessary. This extension extracts the inner call and keeps it there:
 
 **Before:**
 ```javascript
@@ -31,6 +31,15 @@ console.log(initializeAnalytics(), fetchData(id));
 ```javascript
 initializeAnalytics(), fetchData(id);
 ```
+
+### Nested Console Logs
+If you accidentally nested logs, it cleans them up recursively.
+**Before:**
+```javascript
+console.log(console.log("Deep log"));
+```
+**After:**
+*(Entirely removed)*
 
 ### Safety with Comments and Strings
 **Before:**
@@ -45,15 +54,6 @@ console.log("Delete me");
 const msg = "Don't delete this console.log(123)";
 ```
 
-### Nested Console Logs
-If you accidentally nested logs, it cleans them up recursively.
-**Before:**
-```javascript
-console.log(console.log("Deep log"));
-```
-**After:**
-*(Entirely removed)*
-
 ### Arrow Functions
 **Before:**
 ```javascript
@@ -61,8 +61,23 @@ const logData = (data) => console.log(data);
 ```
 **After:**
 ```javascript
-const logData = (data) => data;
+const logData = (data) => ;
 ```
+
+### Console.log as a Value
+When `console.log` is used as a value (like passing it as an argument), the extension safely removes it without breaking the syntax.
+
+**Before:**
+```javascript
+event.register(console.log);
+```
+**After:**
+```javascript
+event.register();
+```
+
+### Console.log as a 
+
 
 ## 🛠 Usage
 
@@ -76,8 +91,22 @@ const logData = (data) => data;
 
 ## 📝 Known Issues
 
--   Currently focuses strictly on `console.log`. Future support for `console.error`, `console.warn`, etc., is planned.
+-   Currently focuses strictly on `console.log`. Others functions like `console.error`, `console.warn` are ignored, as we assume they are placed on purpose.
+- Sequence expressions will leave trailing commas behind. Removing them is error prone so not implemented. It's anyways a practice that should be avoided.
+
+**Before**
+```javascript
+console.log(123),console.log(456);
+```
+**After**
+```javascript
+, ;
+```
+- Console logs used as values inside string templates will not be removed. As this is also not recommended behaviour in the first place and would need a specific implementation. e.g. 
+```javascript
+const mystr = `Hello, ${console.log(user)}!`
+```
 
 ## ⚖️ License
 
-MIT © [Christian Konnaris](https://github.com/ckonnaris)
+MIT © [Christian Konnaris](https://github.com/Clasc)
