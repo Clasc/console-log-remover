@@ -10,7 +10,12 @@
   "engines": {
     "vscode": "^1.107.0"
   },
+  "repository": {
+    "url": "https://github.com/Clasc/console-log-remover"
+  },
   "categories": [
+    "Debuggers",
+    "Formatters",
     "Other"
   ],
   "activationEvents": [],
@@ -47,6 +52,7 @@
   "dependencies": {
     "@babel/parser": "7.28.5",
     "@babel/traverse": "7.28.5",
-    "@babel/types": "7.28.5"
+    "@babel/types": "7.28.5",
+    "@vscode/vsce": "^3.7.1"
   }
 }
