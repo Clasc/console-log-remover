@@ -3,6 +3,7 @@ import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { commands, ExtensionContext, Range, window } from "vscode";
 import { foreEachReversed } from "./utils/forEachReversed";
+import { isConsoleLog } from "./utils/isConsoleLog";
 
 // Extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext) {
@@ -23,12 +24,6 @@ export function activate(context: ExtensionContext) {
           plugins: ["typescript", "jsx"],
         });
 
-        const isConsoleLog = (node: t.CallExpression) =>
-          t.isMemberExpression(node.callee) &&
-          t.isIdentifier(node.callee.object, { name: "console" }) &&
-          t.isIdentifier(node.callee.property) &&
-          node.callee.property.name === "log";
-
         const nodesToKeep: Map<string, string[]> = new Map();
         const getNodeKey = (node: t.Node) => `${node.start} + ${node.end}`;
 
@@ -40,33 +35,40 @@ export function activate(context: ExtensionContext) {
         };
 
         const nodesToDelete: t.Node[] = [];
-        const addRangeToRemove = (node: t.Node) => {
-          // allow rule for implicit nullish and undefined check
-          // eslint-disable-next-line eqeqeq
-          if (node.start != undefined && node.end != undefined) {
-            nodesToDelete.push(node);
-          }
+        const addNodeToRemove = (...nodes: t.Node[]) => {
+          nodesToDelete.push(
+            ...nodes.filter(
+              // allow rule for implicit nullish and undefined check
+              // eslint-disable-next-line eqeqeq
+              (node) => node.start != undefined && node.end != undefined,
+            ),
+          );
         };
 
         traverse(ast, {
-          CallExpression: (path) => {
-            const node = path.node;
+          CallExpression: ({ node, parent }) => {
+            if (
+              !isConsoleLog(node) &&
+              node.arguments.some((arg) => isConsoleLog(arg))
+            ) {
+              addNodeToRemove(...node.arguments.filter(isConsoleLog));
+            }
 
             if (!isConsoleLog(node)) {
               return;
             }
 
-            if (t.isArrowFunctionExpression(path.parent)) {
+            if (t.isArrowFunctionExpression(parent)) {
               //for arrow functions only add the range of the function body to be removed
-              addRangeToRemove(node);
+              addNodeToRemove(node);
             }
 
-            if (t.isExpressionStatement(path.parent)) {
-              addRangeToRemove(path.parent);
+            if (t.isExpressionStatement(parent)) {
+              addNodeToRemove(parent);
             }
 
-            if (t.isSequenceExpression(path.parent)) {
-              addRangeToRemove(node);
+            if (t.isSequenceExpression(parent)) {
+              addNodeToRemove(node);
             }
 
             // Remove nested console log calls inside console.log
@@ -75,7 +77,7 @@ export function activate(context: ExtensionContext) {
             const args = node.arguments
               .filter(t.isCallExpression)
               .filter((arg) => !isConsoleLog(arg));
-            addNodesToKeep(path.parent, args);
+            addNodesToKeep(parent, args);
           },
         });
 

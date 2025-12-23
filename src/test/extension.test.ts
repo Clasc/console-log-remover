@@ -81,7 +81,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(text, "");
   });
 
-  test.skip("Remove console.log passed as a function", async () => {
+  test("Remove console.log passed as a function", async () => {
     const document = await vscode.workspace.openTextDocument({
       content: "event.register(console.log);",
       language: "typescript",
